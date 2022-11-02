@@ -1,0 +1,2 @@
+# typescript-study-class
+初心者向けのTypeScriptの勉強会で利用するサンプルコード集
