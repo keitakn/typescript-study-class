@@ -6,12 +6,12 @@ type CatName = string;
 type CatBreed = 'ScottishFold' | 'Persian' | 'Bengal' | 'Munchkin';
 
 type Cat = {
-  id: CatId;
-  name: CatName;
-  breed: CatBreed;
+  readonly id: CatId;
+  readonly name: CatName;
+  readonly breed: CatBreed;
 };
 
-const cats = [
+const cats: Cat[] = [
   { id: 1, name: 'つくし', breed: 'ScottishFold' as const },
   { id: 2, name: 'モコ', breed: 'Persian' as const },
   { id: 3, name: 'オル', breed: 'Bengal' as const },
