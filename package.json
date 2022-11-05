@@ -4,6 +4,8 @@
   "description": "初心者向けのTypeScriptの勉強会で利用するサンプルコード集",
   "main": "dist/index.js",
   "scripts": {
+    "build": "rm -rf dist && tsc",
+    "start": "node dist/index.js",
     "postinstall": "typesync && npm install --ignore-scripts"
   },
   "repository": {
