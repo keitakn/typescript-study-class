@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { validation, ValidationResult } from './validator';
+
 type CatId = number;
 
 type CatName = string;
@@ -11,6 +14,16 @@ type Cat = {
   readonly id: CatId;
   readonly name: CatName;
   readonly breed: CatBreed;
+};
+
+const catSchema = z.object({
+  id: z.number().min(1).max(Number.MAX_SAFE_INTEGER),
+  name: z.string().min(1).max(20),
+  breed: z.enum(catBreedList),
+});
+
+export const validateCat = (params: unknown): ValidationResult => {
+  return validation(catSchema, params);
 };
 
 const cats: Cat[] = [
