@@ -26,6 +26,16 @@ export const validateCat = (params: unknown): ValidationResult => {
   return validation(catSchema, params);
 };
 
+export const isCat = (value: unknown): value is Cat => {
+  if (Object.prototype.toString.call(value) !== '[object Object]') {
+    return false;
+  }
+
+  const validationResult = validateCat(value);
+
+  return validationResult.isValidate;
+};
+
 const cats: Cat[] = [
   { id: 1, name: 'つくし', breed: 'ScottishFold' as const },
   { id: 2, name: 'モコ', breed: 'Persian' as const },
