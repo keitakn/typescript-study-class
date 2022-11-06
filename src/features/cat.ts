@@ -3,7 +3,9 @@ type CatId = number;
 type CatName = string;
 
 // https://u-ful.com/12448 のページから一部拝借
-type CatBreed = 'ScottishFold' | 'Persian' | 'Bengal' | 'Munchkin';
+const catBreedList = ['ScottishFold', 'Persian', 'Bengal', 'Munchkin'] as const;
+
+type CatBreed = typeof catBreedList[number];
 
 type Cat = {
   readonly id: CatId;
