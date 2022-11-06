@@ -1,14 +1,39 @@
+import { z } from 'zod';
+import { validation, ValidationResult } from './validator';
+
 type CatId = number;
 
 type CatName = string;
 
 // https://u-ful.com/12448 のページから一部拝借
-type CatBreed = 'ScottishFold' | 'Persian' | 'Bengal' | 'Munchkin';
+const catBreedList = ['ScottishFold', 'Persian', 'Bengal', 'Munchkin'] as const;
+
+type CatBreed = typeof catBreedList[number];
 
 type Cat = {
   readonly id: CatId;
   readonly name: CatName;
   readonly breed: CatBreed;
+};
+
+const catSchema = z.object({
+  id: z.number().min(1).max(Number.MAX_SAFE_INTEGER),
+  name: z.string().min(1).max(20),
+  breed: z.enum(catBreedList),
+});
+
+export const validateCat = (params: unknown): ValidationResult => {
+  return validation(catSchema, params);
+};
+
+export const isCat = (value: unknown): value is Cat => {
+  if (Object.prototype.toString.call(value) !== '[object Object]') {
+    return false;
+  }
+
+  const validationResult = validateCat(value);
+
+  return validationResult.isValidate;
 };
 
 const cats: Cat[] = [
