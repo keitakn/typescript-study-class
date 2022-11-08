@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ExhaustiveError } from './errors/ExhaustiveError';
 import { validation, ValidationResult } from './validator';
 
 type CatId = number;
@@ -14,6 +15,32 @@ type Cat = {
   readonly id: CatId;
   readonly name: CatName;
   readonly breed: CatBreed;
+};
+
+const japaneseCatBreedList = [
+  'スコティッシュフォールド',
+  'ペルシャ猫',
+  'ベンガル',
+  'マンチカン',
+] as const;
+
+type JapaneseCatBreed = typeof japaneseCatBreedList[number];
+
+export const convertBreedIntoJapanese = (
+  catBreed: CatBreed
+): JapaneseCatBreed => {
+  switch (catBreed) {
+    case 'ScottishFold':
+      return 'スコティッシュフォールド';
+    case 'Persian':
+      return 'ペルシャ猫';
+    case 'Bengal':
+      return 'ベンガル';
+    case 'Munchkin':
+      return 'マンチカン';
+    default:
+      throw new ExhaustiveError(catBreed);
+  }
 };
 
 const catSchema = z.object({
