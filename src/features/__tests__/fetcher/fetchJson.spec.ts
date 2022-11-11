@@ -28,7 +28,7 @@ type FetchGitHubUserResponseBody = {
 };
 
 // eslint-disable-next-line max-lines-per-function
-describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
+describe('src/features/fetcher.ts fetchJson TestCases', () => {
   beforeAll(() => {
     mockServer.listen();
   });
