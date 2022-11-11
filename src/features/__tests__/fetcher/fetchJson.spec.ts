@@ -16,6 +16,17 @@ const mockHandlers = [rest.get(testUrl, mockFetchUser)];
 
 const mockServer = setupServer(...mockHandlers);
 
+// 全ての型定義をするのは手間なので必要な値にだけ絞って型定義だけ行っています
+type FetchGitHubUserResponseBody = {
+  login: string;
+  id: number;
+  url: `https://api.github.com/users/${string}`;
+  name: string;
+  company: string;
+  blog: string;
+  location: string;
+};
+
 // eslint-disable-next-line max-lines-per-function
 describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
   beforeAll(() => {
@@ -69,7 +80,9 @@ describe('useCatImagesFetcher.ts randomCatImagesFetcher TestCases', () => {
       updated_at: '2022-10-23T08:26:58Z',
     };
 
-    const result = await fetchJson(testUrl);
+    const result = await fetchJson<FetchGitHubUserResponseBody>(
+      'https://api.github.com/users/keitakn'
+    );
 
     expect(result).toStrictEqual(expected);
   });
