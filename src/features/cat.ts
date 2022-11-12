@@ -43,15 +43,12 @@ export const convertBreedIntoJapanese = (
   }
 };
 
-export type CreateCatRequest = {
-  readonly name: CatName;
-  readonly breed: CatBreed;
-};
-
 const createCatRequestSchema = z.object({
   name: z.string().min(1).max(20),
   breed: z.enum(catBreedList),
 });
+
+type CreateCatRequest = z.infer<typeof createCatRequestSchema>;
 
 const validateCatRequest = (params: unknown): ValidationResult => {
   return validation(createCatRequestSchema, params);
