@@ -48,28 +48,19 @@ export type CreateCatRequest = {
   readonly breed: CatBreed;
 };
 
+const createCatRequestSchema = z.object({
+  name: z.string().min(1).max(20),
+  breed: z.enum(catBreedList),
+});
+
+const validateCatRequest = (params: unknown): ValidationResult => {
+  return validation(createCatRequestSchema, params);
+};
+
 export const isCreateCatRequest = (
   value: unknown
 ): value is CreateCatRequest => {
-  if (Object.prototype.toString.call(value) !== '[object Object]') {
-    return false;
-  }
-
-  const request = value as { [key: string]: unknown };
-  if (Object.hasOwn(request, 'name') && Object.hasOwn(request, 'breed')) {
-    if (typeof request.name === 'string' && typeof request.breed === 'string') {
-      if (
-        request.breed === 'ScottishFold' ||
-        request.breed === 'Persian' ||
-        request.breed === 'Bengal' ||
-        request.breed === 'Munchkin'
-      ) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  return validateCatRequest(value).isValidate;
 };
 
 const catSchema = z.object({
