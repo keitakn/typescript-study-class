@@ -43,6 +43,35 @@ export const convertBreedIntoJapanese = (
   }
 };
 
+export type CreateCatRequest = {
+  readonly name: CatName;
+  readonly breed: CatBreed;
+};
+
+export const isCreateCatRequest = (
+  value: unknown
+): value is CreateCatRequest => {
+  if (Object.prototype.toString.call(value) !== '[object Object]') {
+    return false;
+  }
+
+  const request = value as { [key: string]: unknown };
+  if (Object.hasOwn(request, 'name') && Object.hasOwn(request, 'breed')) {
+    if (typeof request.name === 'string' && typeof request.breed === 'string') {
+      if (
+        request.breed === 'ScottishFold' ||
+        request.breed === 'Persian' ||
+        request.breed === 'Bengal' ||
+        request.breed === 'Munchkin'
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
 const catSchema = z.object({
   id: z.number().min(1).max(Number.MAX_SAFE_INTEGER),
   name: z.string().min(1).max(20),
