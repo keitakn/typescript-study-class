@@ -36,7 +36,7 @@ const fetchGitHubUserSchema = z.object({
   location: z.string().min(1).max(20),
 });
 
-const isFetchGitHubUserSchema = (
+const isFetchGitHubUserResponseBody = (
   value: unknown
 ): value is FetchGitHubUserResponseBody => {
   return validation(fetchGitHubUserSchema, value).isValidate;
@@ -97,7 +97,7 @@ describe('src/features/fetcher.ts fetchJson TestCases', () => {
 
     const result = await fetchJson<FetchGitHubUserResponseBody>(
       'https://api.github.com/users/keitakn',
-      isFetchGitHubUserSchema
+      isFetchGitHubUserResponseBody
     );
 
     expect(result).toStrictEqual(expected);
@@ -107,7 +107,7 @@ describe('src/features/fetcher.ts fetchJson TestCases', () => {
     mockServer.use(rest.get(testUrl, mockInternalServerError));
 
     await expect(
-      fetchJson(testUrl, isFetchGitHubUserSchema)
+      fetchJson(testUrl, isFetchGitHubUserResponseBody)
     ).rejects.toStrictEqual(
       new Error(
         'Internal Server Error src/features/fetcher.ts failed to fetchJson'
