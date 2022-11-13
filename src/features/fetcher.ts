@@ -1,4 +1,9 @@
-export const fetchJson = async <T>(url: string): Promise<T> => {
+export type TypeGuardFunction<T> = (value: unknown) => value is T;
+
+export const fetchJson = async <T>(
+  url: string,
+  typeGuardFunction: TypeGuardFunction<T>
+): Promise<T> => {
   const options: RequestInit = {
     method: 'GET',
   };
@@ -10,5 +15,11 @@ export const fetchJson = async <T>(url: string): Promise<T> => {
     );
   }
 
-  return (await response.json()) as T;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const responseBody = await response.json();
+  if (!typeGuardFunction(responseBody)) {
+    throw new Error('src/features/fetcher.ts responseBody type is invalid');
+  }
+
+  return responseBody;
 };

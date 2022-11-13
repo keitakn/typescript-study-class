@@ -4,11 +4,11 @@
 import 'whatwg-fetch';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-
+import { z } from 'zod';
 import { mockInternalServerError } from '../../../mocks/api/error/mockInternalServerError';
-
 import { mockFetchUser } from '../../../mocks/api/external/github/mockFetchUser';
 import { fetchJson } from '../../fetcher';
+import { validation } from '../../validator';
 
 const testUrl = 'https://api.github.com/users/keitakn';
 
@@ -16,15 +16,30 @@ const mockHandlers = [rest.get(testUrl, mockFetchUser)];
 
 const mockServer = setupServer(...mockHandlers);
 
-// 全ての型定義をするのは手間なので必要な値にだけ絞って型定義だけ行っています
+// GitHubのユーザー情報取得APIの型定義。全ての型定義をするのは手間なので必要な値にだけ絞って型定義だけ行っています
 type FetchGitHubUserResponseBody = {
-  login: string;
-  id: number;
-  url: `https://api.github.com/users/${string}`;
-  name: string;
-  company: string;
-  blog: string;
-  location: string;
+  readonly login: string;
+  readonly id: number;
+  readonly url: `https://api.github.com/users/${string}`;
+  readonly name: string;
+  readonly company: string;
+  readonly blog: string;
+  readonly location: string;
+};
+
+const fetchGitHubUserSchema = z.object({
+  login: z.string().min(1).max(20),
+  id: z.number().min(1).max(Number.MAX_SAFE_INTEGER),
+  url: z.string().url(),
+  name: z.string().min(1).max(20),
+  blog: z.string().url(),
+  location: z.string().min(1).max(20),
+});
+
+const isFetchGitHubUserResponseBody = (
+  value: unknown
+): value is FetchGitHubUserResponseBody => {
+  return validation(fetchGitHubUserSchema, value).isValidate;
 };
 
 // eslint-disable-next-line max-lines-per-function
@@ -81,7 +96,8 @@ describe('src/features/fetcher.ts fetchJson TestCases', () => {
     };
 
     const result = await fetchJson<FetchGitHubUserResponseBody>(
-      'https://api.github.com/users/keitakn'
+      'https://api.github.com/users/keitakn',
+      isFetchGitHubUserResponseBody
     );
 
     expect(result).toStrictEqual(expected);
@@ -90,7 +106,9 @@ describe('src/features/fetcher.ts fetchJson TestCases', () => {
   it('should Error Throw, because Failed to fetch GitHub User', async () => {
     mockServer.use(rest.get(testUrl, mockInternalServerError));
 
-    await expect(fetchJson(testUrl)).rejects.toStrictEqual(
+    await expect(
+      fetchJson(testUrl, isFetchGitHubUserResponseBody)
+    ).rejects.toStrictEqual(
       new Error(
         'Internal Server Error src/features/fetcher.ts failed to fetchJson'
       )
