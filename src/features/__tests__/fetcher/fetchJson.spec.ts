@@ -16,7 +16,7 @@ const mockHandlers = [rest.get(testUrl, mockFetchUser)];
 
 const mockServer = setupServer(...mockHandlers);
 
-// 全ての型定義をするのは手間なので必要な値にだけ絞って型定義だけ行っています
+// GitHubのユーザー情報取得APIの型定義。全ての型定義をするのは手間なので必要な値にだけ絞って型定義だけ行っています
 type FetchGitHubUserResponseBody = {
   login: string;
   id: number;
