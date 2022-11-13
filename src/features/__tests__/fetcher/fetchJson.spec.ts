@@ -18,13 +18,13 @@ const mockServer = setupServer(...mockHandlers);
 
 // GitHubのユーザー情報取得APIの型定義。全ての型定義をするのは手間なので必要な値にだけ絞って型定義だけ行っています
 type FetchGitHubUserResponseBody = {
-  login: string;
-  id: number;
-  url: `https://api.github.com/users/${string}`;
-  name: string;
-  company: string;
-  blog: string;
-  location: string;
+  readonly login: string;
+  readonly id: number;
+  readonly url: `https://api.github.com/users/${string}`;
+  readonly name: string;
+  readonly company: string;
+  readonly blog: string;
+  readonly location: string;
 };
 
 const fetchGitHubUserSchema = z.object({
