@@ -18,7 +18,7 @@ export const fetchJson = async <T>(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const responseBody = await response.json();
   if (!typeGuardFunction(responseBody)) {
-    throw new Error('src/features/fetcher.ts responseBody type si invalid');
+    throw new Error('src/features/fetcher.ts responseBody type is invalid');
   }
 
   return responseBody;
